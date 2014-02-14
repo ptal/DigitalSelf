@@ -17,14 +17,13 @@
  <body>
     <h1><a href="/">Neemi -- Service Registration</a></h1>
     {% if request.user.is_authenticated %}
-    {user : {{request.user.username }}}
-<br>
-    {authenticated services :
+    User : {{request.user.username }}
+    <br>
+    Authenticated services :
     {%for sservice in request.user.services%}
       {{sservice}}
     {% endfor %}
-    }
-   {% endif %}
+    {% endif %}
 
     {% if request.user.is_authenticated %}
     <p>Register with one or more of these services:</p>
@@ -42,6 +41,13 @@
       {% endfor %}
     </ul>
 
+    <p>Register a mail account (IMAP):</p>
+
+    <form action="/register/" method="post">{% csrf_token %}
+      {{ mail_account_form.as_p }}
+      <input type="submit" name="bt_register_mail_account" value="Register mail account" />
+    </form>
+
     <a href="/"> Back to main </a>
 
     <br><br><br>
@@ -53,7 +59,7 @@
 
      {% endif %}
 
-
+     <p>You are not logged in.</p>
  
   </body>
 </html>
