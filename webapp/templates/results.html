@@ -4,14 +4,6 @@
 {% block pagetitle %}Search Results{% endblock %}
 
 {% block authenticated_content %}
-{%if request.user.plaid_services %}
-  <br>
-  Plaid services:
-  {%for pservice in request.user.plaid_services%}
-    {{pservice}}
-  {% endfor %}
-{% endif %}
-
 <p>Search Results: {{keywords}} </p>
 
 There are {{results|length }} results.

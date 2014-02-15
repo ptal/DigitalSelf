@@ -4,13 +4,6 @@
 {% block pagetitle %}Search your Data{% endblock %}
 
 {% block authenticated_content %}
-  {%if request.user.plaid_services %}
-    Plaid services :
-    {%for pservice in request.user.plaid_services%}
-      {{pservice}}
-    {% endfor %}
-  {% endif %}
-
   <p>Create Full text indexes for this service:</p>
 
   <form action="/create_indexes/" method="post">{% csrf_token %}

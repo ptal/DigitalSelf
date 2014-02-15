@@ -23,6 +23,13 @@
         {{sservice}}
       {% endfor %}
     {% endif %}
+    
+    {%if request.user.plaid_services %}
+      Banking services :
+      {%for pservice in request.user.plaid_services%}
+        {{pservice}}
+      {% endfor %}
+    {% endif %}
 
     {% if request.user.is_authenticated %}
       {% block authenticated_content %}{% endblock %}
