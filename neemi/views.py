@@ -66,7 +66,7 @@ def authenticate_redirect(request, service):
 
 def neemi_login(request):
     print "neemi-login"
-    username = request.POST['username']
+    username = request.POST['login']
     print username
     password = request.POST['password']
     try:
@@ -84,7 +84,7 @@ def neemi_login(request):
             print "Login Failed - Wrong pw"
             return HttpResponseRedirect('/')
     except DoesNotExist:
-        print "DOesNotExist _ Creating User"
+        print "DoesNotExist _ Creating User"
         currentuser = NeemiUser.create_user(username=username, password=password)
         user = authenticate(username=username,password=password)
         auth_login(request, user)

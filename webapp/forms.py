@@ -4,7 +4,7 @@ from django.contrib.admin import widgets
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms.widgets import Select
 
-SERVICE_CHOICES=(('facebook','Facebook'),
+SERVICE_CHOICES=[('facebook','Facebook'),
                  ('foursquare','foursquare'),
                  ('twitter','Twitter'),
                  ('linkedin','LinkedIn'),
@@ -20,7 +20,7 @@ SERVICE_CHOICES=(('facebook','Facebook'),
                 #'FitBit',
                 #GoogleDocs',
                 #GooglePicasa'
-                )
+                ]
 
   
     #YEAR_CHOICES = reversed(range(2005,2013))
@@ -37,9 +37,13 @@ class KeywordSearchForm(forms.Form):
     keyword = forms.CharField(label="Search",required=True)
 
 class MailAccountForm(forms.Form):
-    server_name = forms.URLField(label="Server name")
+    server_name = forms.URLField(label="Server address")
     server_port = forms.DecimalField(label="Server port", min_value=0, max_value= 65535)
     user_name = forms.CharField(label="User name")
     user_password = forms.CharField(label="User password", widget=forms.PasswordInput)
     connection_security = forms.ChoiceField(label="Connection security", choices=[('none','None'),('starttls','STARTTLS'),('ssltls','SSL/TLS')])
     authentication_method = forms.ChoiceField(label="Authentication Method", choices=[('noramlpw','Normal password')])
+
+class LoginForm(forms.Form):
+    login = forms.CharField(label="Login")
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)

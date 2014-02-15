@@ -1,28 +1,26 @@
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.http import HttpResponseRedirect
-from forms import GetDataForm, KeywordSearchForm, MailAccountForm, SERVICE_CHOICES
 from neemi.data import get_user_data, get_all_user_data
 from neemi.search import simple_keyword_search
 from neemi.stats import *
+from forms import *
 import time, datetime
 
 def index(request, template='index.html'):
-
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
+    login_form = LoginForm()
+    context = RequestContext(request, {'login_form':login_form})
+    response = render_to_response(template, locals(), context_instance=context)
     return response
 
 def register(request, template='register.html'):
     services = SERVICE_CHOICES
+    context = RequestContext(request, {'mail_account_form':mail_form})
     mail_form = MailAccountForm()
-    response = render_to_response(
-      template, locals(), context_instance=RequestContext(request, {'mail_account_form':mail_form}))
+    response = render_to_response(template, locals(), context_instance=context)
     return response
 
 def search(request, template='search.html'):
-
     if request.method == 'POST':
         form = KeywordSearchForm(request.POST)
         if form.is_valid():
@@ -37,20 +35,16 @@ def search(request, template='search.html'):
             dform = form
     else:
         dform = KeywordSearchForm()
-        
-    response = render_to_response(
-    template, locals(), context_instance=RequestContext(request,{'form':dform})
-        )
+    context = RequestContext(request,{'form':dform})
+    response = render_to_response(template, locals(), context_instance=context)
     return response
 
 def query_results(request, template='results.html'):
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
+    context = RequestContext(request)
+    response = render_to_response(template, locals(), context_instance=context)
     return response
 
 def get_data(request, template='data.html'):
-    
     if request.method == 'POST':
         form = GetDataForm(request.POST)
         if form.is_valid():
@@ -87,16 +81,14 @@ def get_data(request, template='data.html'):
             dform = form
     else:
         dform = GetDataForm()
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request,{'form':dform})
-        )
+    context = RequestContext(request,{'form':dform})
+    response = render_to_response(template, locals(), context_instance=context)
     return response
 
 
 def delete(request, template='delete.html'):
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
+    context = RequestContext(request)
+    response = render_to_response(template, locals(), context_instance=RequestContext(request))
     return response
 
 def get_stats(request, template='stats.html'):
@@ -104,20 +96,13 @@ def get_stats(request, template='stats.html'):
         stats = DBAnalysis(request)
         html_stats = stats.basic_stats()   
 
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
-
-#    response = render_to_response(template, locals(), context_instance=RequestContext(request),#{"html_stats":html_stats})
-
+    response = render_to_response(template, locals(), context_instance=RequestContext(request))
     return response
 
 def error(request, template='error.html'):
     message = request.GET.get('message')
     print "Message: ", message
-    response = render_to_response(
-            template, locals(), context_instance=RequestContext(request)
-        )
+    response = render_to_response(template, locals(), context_instance=RequestContext(request))
     return response
 
 
