@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from neemi.data import get_user_data, get_all_user_data
 from neemi.search import simple_keyword_search
 from neemi.stats import *
+from neemi.mail_account import *
 from forms import *
 import time, datetime
 
@@ -14,9 +15,20 @@ def index(request, template='index.html'):
     return response
 
 def register(request, template='register.html'):
-    services = SERVICE_CHOICES
-    context = RequestContext(request, {'mail_account_form':mail_form})
-    mail_form = MailAccountForm()
+    if request.method == 'POST':
+        mail_form = MailAccountForm(request.POST)
+        if mail_form.is_valid():
+            mail_account = MailAccount(
+                mail_form.cleaned_data['server_addr'],
+                mail_form.cleaned_data['server_port'],
+                mail_form.cleaned_data['user_name'],
+                mail_form.cleaned_data['user_password'],
+                mail_form.cleaned_data['connection_security'],
+                mail_form.cleaned_data['authentication_method'])
+            mail_account.imap4_connect()
+    else:
+        mail_form = MailAccountForm()
+    context = RequestContext(request, {'mail_account_form':mail_form, 'services':SERVICE_CHOICES})
     response = render_to_response(template, locals(), context_instance=context)
     return response
 
