@@ -1,62 +1,21 @@
-<!DOCTYPE html>
-<html>
- <head>
-  <title>Neemi  -- Search your Data</title>
+{% extends "base_page.html" %}
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+{% block title %}Service Registration{% endblock %}
+{% block pagetitle %}Service Registration{% endblock %}
 
-  <script>
-   var accessToken = '{{ user_profile.access_token }}';
-  </script>
+{% block authenticated_content %}
+{%if request.user.plaid_services %}
+  <br>
+  Plaid services:
+  {%for pservice in request.user.plaid_services%}
+    {{pservice}}
+  {% endfor %}
+{% endif %}
 
-  <script src="/static/app.js"></script>
+<p>Search this service:</p>
 
-  <link rel="stylesheet" href="/static/style.css" />
- </head>
-
- <body>
-    <h1><a href="/">Neemi -- Search your Data</a></h1>
-    {% if request.user.is_authenticated %}
-    {user : {{request.user.username }}}
-<br>
-    {authenticated services :
-    {%for sservice in request.user.services%}
-      {{sservice}}
-    {% endfor %}
-    }
-        {%if request.user.plaid_services %}
-        <br>
-        {plaid services :
-        {%for pservice in request.user.plaid_services%}
-            {{pservice}}
-        {% endfor %}
-        }
-        {% endif %}
-
-    {% endif %}
-
- 
-        <p>Search  this service:</p>
-
-    <form action="/search/" method="post">{% csrf_token %}
-
-     {{ form.as_p }}
-     <input type="submit"  value="Search" /><br><br>
-
-     </form>
-
-	   <br>
-      <a href=./index.html>
-
- 
-
-     <a href="/"> Back to main </a>
-
-    
-
-<br><br><br>
-    <form action="/logout/" method="post">{% csrf_token %}
-    <input type="submit" value="Log Out" />
-    </form>
-  </body>
-</html>
+<form action="/search/" method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit"  value="Search" /><br><br>
+</form>
+{% endblock %}

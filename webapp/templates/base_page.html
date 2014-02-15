@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Neemi -- {% block title %}Neemi{% endblock %}</title>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <script>
+      var accessToken = '{{ user_profile.access_token }}';
+    </script>
+
+    <script src="/static/app.js"></script>
+
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+
+  <body>
+    <h1><a href="/">Neemi -- {% block pagetitle %}Neemi{% endblock %}</a></h1>
+    {% if request.user.is_authenticated %}
+      User : {{request.user.username }} <br>
+      Authenticated services :
+      {%for sservice in request.user.services%}
+        {{sservice}}
+      {% endfor %}
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
+      {% block authenticated_content %}{% endblock %}
+    {% else %}
+      {% block unauthenticated_content %}<p>You are not logged in.</p>{% endblock %}
+    {% endif %}
+
+    {% block back_to_main %}
+      <br>
+      <a href="/"> Back to main </a>
+    {% endblock %}
+
+    {% if request.user.is_authenticated %}
+
+    <br><br><br>
+    <form action="/logout/" method="post">{% csrf_token %}
+      <input type="submit" value="Log Out" />
+    </form>
+
+    {% endif %}
+
+  </body>
+</html>
