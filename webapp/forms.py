@@ -37,12 +37,12 @@ class KeywordSearchForm(forms.Form):
     keyword = forms.CharField(label="Search",required=True)
 
 class MailAccountForm(forms.Form):
-    server_name = forms.URLField(label="Server address")
+    server_addr = forms.CharField(label="Server address")
     server_port = forms.DecimalField(label="Server port", min_value=0, max_value= 65535)
     user_name = forms.CharField(label="User name")
     user_password = forms.CharField(label="User password", widget=forms.PasswordInput)
     connection_security = forms.ChoiceField(label="Connection security", choices=[('none','None'),('starttls','STARTTLS'),('ssltls','SSL/TLS')])
-    authentication_method = forms.ChoiceField(label="Authentication Method", choices=[('noramlpw','Normal password')])
+    authentication_method = forms.ChoiceField(label="Authentication method", choices=[('normalpw','Normal password')])
 
 class LoginForm(forms.Form):
     login = forms.CharField(label="Login")
