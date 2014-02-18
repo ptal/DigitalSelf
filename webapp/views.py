@@ -4,9 +4,9 @@ from django.http import HttpResponseRedirect
 from neemi.data import get_user_data, get_all_user_data
 from neemi.search import simple_keyword_search
 from neemi.stats import *
-from neemi.mail_account import *
 from forms import *
 import time, datetime
+import subprocess
 
 def index(request, template='index.html'):
     login_form = LoginForm()
@@ -18,14 +18,16 @@ def register(request, template='register.html'):
     if request.method == 'POST':
         mail_form = MailAccountForm(request.POST)
         if mail_form.is_valid():
-            mail_account = MailAccount(
-                mail_form.cleaned_data['server_addr'],
-                mail_form.cleaned_data['server_port'],
-                mail_form.cleaned_data['user_name'],
-                mail_form.cleaned_data['user_password'],
-                mail_form.cleaned_data['connection_security'],
-                mail_form.cleaned_data['authentication_method'])
-            mail_account.imap4_connect()
+            cmd = ["python3", "neemi-mail/neemi_mail.py",
+                "-s" + mail_form.cleaned_data['server_addr'],
+                "-p" + str(mail_form.cleaned_data['server_port']),
+                "-u" + mail_form.cleaned_data['user_name'],
+                "-w" + mail_form.cleaned_data['user_password'],
+                "-c" + mail_form.cleaned_data['connection_security'],
+                "-a" + mail_form.cleaned_data['authentication_method'],
+                "-n" + request.user.username]
+            print (cmd)
+            subprocess.Popen(cmd)
     else:
         mail_form = MailAccountForm()
     context = RequestContext(request, {'mail_account_form':mail_form, 'services':SERVICE_CHOICES})
