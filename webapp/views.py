@@ -15,7 +15,7 @@ def index(request, template='index.html'):
     return response
 
 def register(request, template='register.html'):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.is_authenticated():
         mail_form = MailAccountForm(request.POST)
         if mail_form.is_valid():
             cmd = ["python3", "neemi-mail/neemi_mail.py",
