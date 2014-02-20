@@ -29,23 +29,26 @@ class MailAccount:
         flags, delimiter, mailbox_name = mailboxlist_regex.match(str(mailbox, encoding='utf8')).groups()
         # We want the mailbox to be selectable.
         if not "\\noSelect" in flags:
+          print (mailbox_name)
           result, data = self.mail_server.select(mailbox_name, readonly=True)
+          print(data)
           if(result == 'OK'):
-            result, data = self.mail_server.uid("search", None, 'ALL')
+            result, data = self.mail_server.search(None, 'ALL')
             if(result == 'OK'):
               mail_ids = str(b' '.join(data), encoding='utf8').split()
               for mail_id in mail_ids:
-                result, mail = self.mail_server.uid("fetch", mail_id, "RFC822")
-                print (mail_id),
-                print (" "),
+                result, msg_data = self.mail_server.fetch(mail_id, "RFC822")
                 if(result == 'OK'):
-                  analyser.analyse(mail[0])
+                  for response_part in msg_data:
+                    if isinstance(response_part, tuple):
+                      analyser.analyse(response_part[1])
                 else:
                   print("fetch: " + result + " " + data)
             else:
               print("search: " + result + " " + data)
           else:
             print("select: " + result)
+      analyser.save()
     else:
       print('Cannot list mailboxes.')
 
